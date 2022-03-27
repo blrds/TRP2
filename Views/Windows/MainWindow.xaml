@@ -1,4 +1,4 @@
-﻿<Window x:Class="TRP2.MainWindow"
+﻿<Window x:Name="window" x:Class="TRP2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,16 +17,16 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="1" LastChildFill="True">
-            <Button DockPanel.Dock="Bottom" Margin="5" Content="СТАРТ"/>
+            <Button DockPanel.Dock="Bottom" Margin="5" Content="СТАРТ" Command="{Binding StartCommand}"/>
             <StackPanel  Orientation="Vertical">
                 <TextBlock Text="Время моделирования" Margin="5"/>
-                <TextBox Margin="5"/>
+                <TextBox Margin="5" Text="{Binding Time, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Среднее время работы" Margin="5"/>
-                <TextBox Margin="5"/>
+                <TextBox Margin="5" Text="{Binding M, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="Среднее отклонение" Margin="5"/>
-                <TextBox Margin="5"/>
-                <TextBlock Text="Время моделирования" Margin="5"/>
-                <TextBox Margin="5"/>
+                <TextBox Margin="5" Text="{Binding Q, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Margin="5"><Run Language="ru-ru" Text="Кол-во экспериментов"/></TextBlock>
+                <TextBox Margin="5" Text="{Binding ExpNumber, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:D\}, UpdateSourceTrigger=PropertyChanged}"/>
 
             </StackPanel>
         </DockPanel>
@@ -36,7 +36,7 @@
                     Табличное представление
                 </TabItem.Header>
                 <DataGrid>
-                    
+
                 </DataGrid>
             </TabItem>
             <TabItem>
@@ -44,7 +44,7 @@
                     График
                 </TabItem.Header>
                 <oxy:PlotView>
-                    
+
                 </oxy:PlotView>
             </TabItem>
         </TabControl>
