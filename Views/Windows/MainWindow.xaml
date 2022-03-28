@@ -27,7 +27,6 @@
                 <TextBox Margin="5" Text="{Binding Q, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Margin="5"><Run Language="ru-ru" Text="Кол-во экспериментов"/></TextBlock>
                 <TextBox Margin="5" Text="{Binding ExpNumber, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:D\}, UpdateSourceTrigger=PropertyChanged}"/>
-
             </StackPanel>
         </DockPanel>
         <TabControl>
@@ -35,17 +34,23 @@
                 <TabItem.Header>
                     Табличное представление
                 </TabItem.Header>
-                <DataGrid>
 
+                <DataGrid ItemsSource="{Binding Flows}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Интенсивность" Binding="{Binding Intensity}"/>
+                        <DataGridTextColumn Header="Порядок" Binding="{Binding TargetFlowLevel}"/>
+                        <DataGridTextColumn Header="Общее число событий" Binding="{Binding BaseFlowSize}"/>
+                        <DataGridTextColumn Header="Число реализованных событий" Binding="{Binding TargetFlowSize}"/>
+                    </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
             <TabItem>
                 <TabItem.Header>
                     График
                 </TabItem.Header>
-                <oxy:PlotView>
+                <oxy:PlotView Model="{Binding Model, Mode=OneWay}"/>
 
-                </oxy:PlotView>
+
             </TabItem>
         </TabControl>
 
