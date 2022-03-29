@@ -54,17 +54,20 @@ namespace TRP2.ViewModels
         {
             double t = 0.0, T = 0.0;
             var answer = new FlowInfo(k, l);
-            do
+            while (t < Tk)
             {
                 for (int n = 0; n < k; n++)
                 {
+                    if (t > Tk)
+                        return answer;
+
                     double r = random.NextDouble();
                     T = (-1.0 / l) * Math.Log(r);
                     t += T;
                     answer.BaseFlow.Add(new Models.DataPoint(t));
                 }
                 answer.TargetFlow.Add(new Models.DataPoint(t));
-            } while (t < Tk);
+            } 
             return answer;
         }
         public ICommand StartCommand { get; }
