@@ -38,9 +38,9 @@
                 <DataGrid ItemsSource="{Binding Flows}" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Интенсивность" Binding="{Binding Intensity}" IsReadOnly="True"/>
-                        <DataGridTextColumn Header="Порядок" Binding="{Binding TargetFlowLevel}"/>
-                        <DataGridTextColumn Header="Общее число событий" Binding="{Binding BaseFlowSize}"/>
-                        <DataGridTextColumn Header="Число реализованных событий" Binding="{Binding TargetFlowSize}"/>
+                        <DataGridTextColumn Header="Порядок" Binding="{Binding TargetFlowLevel}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Общее число событий" Binding="{Binding BaseFlowSize}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Число реализованных событий" Binding="{Binding TargetFlowSize}" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
