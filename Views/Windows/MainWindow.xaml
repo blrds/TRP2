@@ -17,7 +17,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="1" LastChildFill="True">
-            <Button DockPanel.Dock="Bottom" Margin="5" Content="СТАРТ" Command="{Binding StartCommand}"/>
+            <Button DockPanel.Dock="Bottom" Margin="5" Content="СТАРТ" Command="{Binding StartCommand}" Click="Button_Click"/>
             <StackPanel  Orientation="Vertical">
                 <TextBlock Text="Время моделирования" Margin="5"/>
                 <TextBox Margin="5" Text="{Binding Time, BindsDirectlyToSource=True, FallbackValue=NaN, Mode=TwoWay, StringFormat=\{0:F2\}, UpdateSourceTrigger=PropertyChanged}"/>

@@ -15,10 +15,12 @@ namespace TRP2.Models
 
         public int Intensity { get; private set; }
 
-        public int TargetFlowSize => TargetFlow.Count;
+        public int TargetFlowSize => TargetFlow.Count==0?_targetFlowSize:TargetFlow.Count;
 
-        public int BaseFlowSize => BaseFlow.Count;
+        public int BaseFlowSize => BaseFlow.Count==0?_baseFlowSize:BaseFlow.Count;
 
+        private int _targetFlowSize = 0;
+        private int _baseFlowSize = 0;
         public FlowInfo(int level, int intens) {
             TargetFlowLevel = level;
             Intensity = intens;
@@ -26,5 +28,14 @@ namespace TRP2.Models
             BaseFlow = new List<DataPoint>();
         }
 
+        public FlowInfo(int level, int intens, int tSize, int bSize)
+        {
+            TargetFlowLevel = level;
+            Intensity = intens;
+            TargetFlow = new List<DataPoint>();
+            BaseFlow = new List<DataPoint>();
+            _targetFlowSize = tSize;
+            _baseFlowSize = bSize;
+        }
     }
 }

@@ -6,6 +6,7 @@ using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using TRP2.Infrastructure.Commands;
 using TRP2.Infrastructure.ObservableObjects;
@@ -27,14 +28,16 @@ namespace TRP2.ViewModels
         public int ExpNumber { get; set; }
         public int Intensity { get => Flows[0].Intensity; }
         public int TargetFlowLevel { get => Flows[0].TargetFlowLevel; }
-        public double BaseFlowSize { 
-            get {
+        public double BaseFlowSize
+        {
+            get
+            {
                 double answer = 0;
                 foreach (var a in Flows)
                     answer += a.BaseFlowSize;
                 answer /= Flows.Count;
                 return answer;
-            } 
+            }
         }
         public double TargetFlowSize
         {
@@ -67,35 +70,42 @@ namespace TRP2.ViewModels
                     answer.BaseFlow.Add(new Models.DataPoint(t));
                 }
                 answer.TargetFlow.Add(new Models.DataPoint(t));
-            } 
+            }
             return answer;
         }
         public ICommand StartCommand { get; }
-        private bool CanStartCommnadExecute(object p) => (M != Q && ExpNumber >= 1);
+        private bool CanStartCommnadExecute(object p) => (M != Q && ExpNumber >= 1 && M >= 0 && Q >= 0);
         private void OnStartCommandExecuted(object p)
         {
             Flows.Clear();
             double lk = 1 / M;
-            double k = Convert.ToDouble(Math.Round(1 / (Q * Q) / (lk * lk)));
-            double l = Convert.ToDouble(Math.Round(k * lk));
+            double k = Math.Ceiling(1 / (Q * Q) / (lk * lk));
+            double l = Math.Round(k * lk);
             for (int i = 0; i < ExpNumber; i++)
             {
                 var flow = Process((int)Math.Round(l), (int)Math.Round(k), Time);
                 Flows.Add(flow);
             }
             ModelSetup((int)Math.Round(k));
-            for (int i = 0; i < Flows.Count; i++)
-            {
-                var series = new HistogramSeries { XAxisKey = "X", YAxisKey = "Y", StrokeThickness = 0 };
-                foreach (var a in Flows[i].BaseFlow)
-                    series.Items.Add(new HistogramItem(a.Time - 0.02, a.Time + 0.02, 0.04f, 1));
+            
+            var series = new HistogramSeries { XAxisKey = "X", YAxisKey = "Y", StrokeThickness = 0 };
+            foreach (var a in Flows.Last().BaseFlow)
+                series.Items.Add(new HistogramItem(a.Time - 0.02, a.Time + 0.02, 0.04f, 1));
 
-                foreach (var a in Flows[i].TargetFlow)
-                    series.Items.Add(new HistogramItem(a.Time - 0.02, a.Time + 0.02, Flows[i].TargetFlowLevel / 25f, Flows[i].TargetFlowLevel));
-                series.FillColor = OxyColors.Automatic;
-                series.SeriesGroupName = i.ToString();
-                Model.Series.Add(series);
+            foreach (var a in Flows.Last().TargetFlow)
+                series.Items.Add(new HistogramItem(a.Time - 0.02, a.Time + 0.02, 0.08f, 2));
+            series.FillColor = OxyColors.Automatic;
+            Model.Series.Add(series);
+
+            double avT = 0.0f, avB = 0.0f;
+            foreach (var a in Flows)
+            {
+                avT += a.TargetFlowSize;
+                avB += a.BaseFlowSize;
             }
+            avT /= Flows.Count;
+            avB /= Flows.Count;
+            Flows.Add(new FlowInfo((int)Math.Round(k), (int)Math.Round(l), (int)Math.Round(avT), (int)Math.Round(avB)));
             Model.InvalidatePlot(true);
 
         }
@@ -106,8 +116,8 @@ namespace TRP2.ViewModels
             Model.Axes.Clear();
             Model.Series.Clear();
             Model.Legends.Add(new Legend());
-            Model.Axes.Add(new LinearAxis { Key = "X", Position = AxisPosition.Bottom, Minimum = 0, Maximum = Time + 1 });
-            Model.Axes.Add(new LinearAxis { Key = "Y", Position = AxisPosition.Left, Minimum = 0, Maximum = k + 1 });
+            Model.Axes.Add(new LinearAxis { Key = "X", Position = AxisPosition.Bottom, Minimum = 0, Maximum = Time + Time * 0.01 });
+            Model.Axes.Add(new LinearAxis { Key = "Y", Position = AxisPosition.Left, Minimum = 0, Maximum = 2.01 });
         }
         public MainWindowViewModel()
         {
